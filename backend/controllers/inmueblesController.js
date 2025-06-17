@@ -40,7 +40,7 @@ async function publicarPropiedad(req, res) {
 
     const id_inmueble = resultado.insertId;
 
-    // Si hay imagen, guardarla en FotosInmueble
+    
     if (req.file) {
       const url_foto = `http://localhost:3001/uploads/${req.file.filename}`;
       await db.query(
