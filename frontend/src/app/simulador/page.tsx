@@ -12,14 +12,14 @@ export default function SimuladorPage() {
       <div className="card-header bg-warning text-dark">Simulación de Pago</div>
       <div className="card-body">
         <div className="mb-3">
-          <label className="form-label">Renta mensual (MXN)</label>
+          <label className="form-label">Renta mensual (Lps)</label>
           <input type="number" value={renta} onChange={(e) => setRenta(+e.target.value)} className="form-control" />
         </div>
         <div className="mb-3">
           <label className="form-label">Meses de renta</label>
           <input type="number" value={meses} onChange={(e) => setMeses(+e.target.value)} className="form-control" />
         </div>
-        <h5>Total estimado: <strong>${total.toLocaleString()} MXN</strong></h5>
+        <h5>Total estimado: <strong>{total.toLocaleString()} Lps</strong></h5>
       </div>
     </div>
   );

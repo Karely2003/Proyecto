@@ -9,7 +9,7 @@ export default function NavbarArrendador() {
 
 const cerrarSesion = () => {
   localStorage.removeItem("rol");
-  router.push("/");
+  router.push("/login");
 };
 
   return (

@@ -5,7 +5,9 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-delete L.Icon.Default.prototype._getIconUrl;
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
@@ -147,17 +149,16 @@ export default function MapaPage() {
         <MapContainer
           center={ubicaciones[0]}
           zoom={9}
-          className="w-100 h-200 m-0 p-0 overflow-hidden"
+          style={{ height: "400px", width: "100%" }}  // Altura fija para que se vea
           scrollWheelZoom={true}
         >
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-
+          {/* Marcadores */}
           {inmueblesFiltrados.map((inmueble, index) => {
-            const [lat, lng] =
-              ubicaciones[index % ubicaciones.length] || ubicaciones[0];
+            const [lat, lng] = ubicaciones[index % ubicaciones.length] || ubicaciones[0];
             return (
               <Marker key={inmueble.id} position={[lat, lng]}>
                 <Popup maxWidth={250}>
@@ -169,25 +170,21 @@ export default function MapaPage() {
                   <br />
                   Precio: {inmueble.precio} Lps
                   <br />
-                  <button
-                    onClick={() => handleAlquilar(inmueble.id)}
-                    style={{
-                      marginTop: "8px",
-                      padding: "6px 12px",
-                      backgroundColor: "#2563eb",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                  >
+                  <button onClick={() => handleAlquilar(inmueble.id)} style={{
+                    marginTop: "8px",
+                    padding: "6px 12px",
+                    backgroundColor: "#2563eb",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}>
                     Alquilar
                   </button>
                 </Popup>
               </Marker>
             );
           })}
-
           <Circle
             center={ubicaciones[0]}
             radius={20000}
@@ -198,6 +195,7 @@ export default function MapaPage() {
             }}
           />
         </MapContainer>
+
       </div>
     </>
   );

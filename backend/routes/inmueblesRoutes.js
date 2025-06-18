@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+  const db = require("../db/connection"); 
 const { publicarPropiedad, buscarInmuebles } = require("../controllers/inmueblesController");
 
 
@@ -17,7 +18,7 @@ router.post("/publicar", upload.single("foto"), publicarPropiedad);
 
 
 router.get("/", async (req, res) => {
-  const db = require("../db/connection"); 
+
 
   try {
     const [inmuebles] = await db.query(`

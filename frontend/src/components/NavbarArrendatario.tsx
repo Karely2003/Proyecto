@@ -9,7 +9,7 @@ export default function NavbarArrendatario() {
 
 const cerrarSesion = () => {
   localStorage.removeItem("rol");
-  router.push("/");
+  router.push("/login");
 };
 
   return (
@@ -43,7 +43,6 @@ const cerrarSesion = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item"><a className="nav-link" href="/busqueda">Búsqueda</a></li>
-            <li className="nav-item"><a className="nav-link" href="/resultados">Resultados</a></li>
             <li className="nav-item"><a className="nav-link" href="/inmueble/1">Inmueble</a></li>
             <li className="nav-item"><a className="nav-link" href="/chat">Chat</a></li>
             <li className="nav-item"><a className="nav-link" href="/simulador">Simulador</a></li>

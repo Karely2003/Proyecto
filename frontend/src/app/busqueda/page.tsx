@@ -1,6 +1,7 @@
 'use client'; 
-
+import Link from "next/link";
 import React, { useState } from 'react';
+import { FiMessageSquare } from "react-icons/fi"; 
 import { Modal, Button, Form, Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -79,16 +80,26 @@ export default function BusquedaPage() {
                     No hay foto disponible
                   </div>
                 )}
-                <Card.Body>
-                  <Card.Title>{inmueble.nombre_publicacion}</Card.Title>
-                  <Card.Text>
-                    <strong>Dirección:</strong> {inmueble.direccion}, {inmueble.barrio_colonia}<br />
-                    <strong>Tipo:</strong> {inmueble.tipo}<br />
-                    <strong>Precio:</strong> L. {inmueble.precio.toLocaleString()}<br />
-                    <strong>Mascotas:</strong> {inmueble.acepta_mascotas ? 'Sí' : 'No'}<br />
-                    <small className="text-muted">{inmueble.descripcion.substring(0, 100)}...</small>
-                  </Card.Text>
-                </Card.Body>
+               <Card.Body>
+                    <Card.Title>{inmueble.nombre_publicacion}</Card.Title>
+                    <Card.Text>
+                      <strong>Dirección:</strong> {inmueble.direccion}, {inmueble.barrio_colonia}<br />
+                      <strong>Tipo:</strong> {inmueble.tipo}<br />
+                      <strong>Precio:</strong> L. {inmueble.precio.toLocaleString()}<br />
+                      <strong>Mascotas:</strong> {inmueble.acepta_mascotas ? 'Sí' : 'No'}<br />
+                      <small className="text-muted">{inmueble.descripcion.substring(0, 100)}...</small>
+                    </Card.Text>
+
+                    <div className="mt-3 d-flex justify-content-between">
+                      <Link href={`/inmueble/${inmueble.id}`} className="btn btn-outline-primary btn-sm">
+                        Ver más
+                      </Link>
+                      <Link href={`/chat`} className="btn btn-outline-secondary btn-sm">
+                        <FiMessageSquare className="me-1" /> Mensaje
+                      </Link>
+                    </div>
+                  </Card.Body>
+
               </Card>
             </Col>
           ))}
