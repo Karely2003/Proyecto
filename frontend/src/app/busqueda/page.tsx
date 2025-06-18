@@ -1,7 +1,23 @@
-'use client';
+'use client'; 
+
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+interface Inmueble {
+  id: number;
+  nombre_publicacion: string;
+  descripcion: string;
+  direccion: string;
+  barrio_colonia: string;
+  tipo: 'Apartamento' | 'Casa' | 'Cuarto'; 
+  precio: number;
+  acepta_mascotas: boolean;
+  servicios_incluidos: string;
+  normas_convivencia: string;
+  fotos: string[]; 
+}
 
 export default function BusquedaPage() {
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -12,10 +28,33 @@ export default function BusquedaPage() {
     habitaciones: '',
     tipo: '',
   });
+  
+  const [resultados, setResultados] = useState<Inmueble[]>([]);
 
-  const aplicarFiltros = () => {
+  const aplicarFiltros = async () => {
     console.log('Filtros aplicados:', filtros);
     setMostrarModal(false);
+
+    const queryParams = new URLSearchParams();
+    if (filtros.ubicacion) queryParams.append('ubicacion', filtros.ubicacion);
+    if (filtros.precioMin) queryParams.append('precioMin', filtros.precioMin);
+    if (filtros.precioMax) queryParams.append('precioMax', filtros.precioMax);
+    if (filtros.tipo) queryParams.append('tipo', filtros.tipo);
+
+    try {
+     
+      const response = await fetch(`http://localhost:3001/api/inmuebles/buscar?${queryParams.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Inmueble[] = await response.json(); 
+      setResultados(data);
+      console.log('Resultados de la búsqueda:', data);
+    } catch (error) {
+      console.error('Error al buscar inmuebles en el frontend:', error);
+      setResultados([]);
+    }
   };
 
   return (
@@ -28,8 +67,35 @@ export default function BusquedaPage() {
         </Button>
       </div>
 
-      {/* Aquí puedes mostrar resultados de búsqueda */}
-      <p className="text-center text-muted">Aquí aparecerán los resultados de búsqueda según tus filtros.</p>
+      {resultados.length > 0 ? (
+        <Row xs={1} md={2} lg={3} className="g-4">
+          {resultados.map((inmueble) => (
+            <Col key={inmueble.id}>
+              <Card>
+                {inmueble.fotos && inmueble.fotos.length > 0 ? (
+                  <Card.Img variant="top" src={inmueble.fotos[0]} alt={inmueble.nombre_publicacion} style={{ height: '200px', objectFit: 'cover' }} />
+                ) : (
+                  <div style={{ height: '200px', backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    No hay foto disponible
+                  </div>
+                )}
+                <Card.Body>
+                  <Card.Title>{inmueble.nombre_publicacion}</Card.Title>
+                  <Card.Text>
+                    <strong>Dirección:</strong> {inmueble.direccion}, {inmueble.barrio_colonia}<br />
+                    <strong>Tipo:</strong> {inmueble.tipo}<br />
+                    <strong>Precio:</strong> L. {inmueble.precio.toLocaleString()}<br />
+                    <strong>Mascotas:</strong> {inmueble.acepta_mascotas ? 'Sí' : 'No'}<br />
+                    <small className="text-muted">{inmueble.descripcion.substring(0, 100)}...</small>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <p className="text-center text-muted">Aquí aparecerán los resultados de búsqueda según tus filtros. No se encontraron inmuebles con los filtros aplicados.</p>
+      )}
 
       {/* Modal de filtros */}
       <Modal show={mostrarModal} onHide={() => setMostrarModal(false)} centered>
